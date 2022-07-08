@@ -7,7 +7,7 @@ export interface Subscriber {
 }
 
 // handle Emitter logging
-const LogEnable = false
+const LogEnable = true
 
 export const Emitter = (() => {
   let subscribers: Subscriber[] = []
@@ -30,7 +30,6 @@ export const Emitter = (() => {
     })
     IDer += 1
     return () => {
-      _writeLog(`UNSUBSCRIBE FOR: ${id}`)
       subscribers = subscribers.filter((subscriber: Subscriber) => subscriber.id !== id)
     }
   }

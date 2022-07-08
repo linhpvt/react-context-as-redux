@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { v4 } from 'uuid';
 
-import logo from './logo.svg';
 import './App.css';
 import { useStore } from './store/useStore';
 import { useEffect } from 'react';
 import * as Actions from './features/http/actions';
+import Client from './pages/client';
+import Http from './pages/http';
+import Resources from './pages/resources';
 
 const mapStateToProps = ((state: any) => {
   const {
@@ -95,29 +97,57 @@ function App() {
           action = Actions.httpRequestingAction()
       }
       dispatch(action)
-    }, 1000)
+    }, 50000)
     
     return () => clearInterval(pt)
   }, [dispatch])
 
+  const [appear, setAppear] = useState(0);
+  useEffect(() => {
+    setInterval(() => {
+      let n = Math.floor((Math.random() * 10) % 10)
+      // n = 10
+      setAppear(n)
+    }, 10000)
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <div className="App-header">
         <p>{status}</p>
         <p>{v4()}</p>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      </div>
+
+      <div>
+        { (appear === 0) && <div>
+          <Client></Client>
+          <Http></Http>
+          <Resources></Resources>
+        </div>
+        }
+        { (appear === 1) && <div>
+          
+          <Http></Http>
+          <Resources></Resources>
+        </div>
+        }
+        { (appear === 2) && <div>
+          <Client></Client>
+          
+          <Resources></Resources>
+        </div>
+        }
+        { (appear === 3) && <div>
+          <Client></Client>
+          <Http></Http>
+          
+        </div>
+        }
+        { (appear === 4) && <div>
+          <Resources></Resources>
+        </div>
+        }
+      </div>
     </div>
   );
 }
