@@ -16,6 +16,10 @@ const AllReducers = {
   [ResourcesPage]: resourcesReducer
 } as any;
 
+
+// set initial state for emitter
+Emitter.publish(RootInitState);
+
 export const rootReducer = (state: any = RootInitState, action: any) => {
   const { meta: { feature = '' } = {}} = action
   

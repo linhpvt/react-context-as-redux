@@ -2,7 +2,7 @@ export interface Subscriber {
   id: number
   mapStateFn: Function
   callbackFn: Function
-  lastState: any,
+  currentState: any,
   logger?: Function
 }
 
@@ -12,6 +12,7 @@ const LogEnable = true
 export const Emitter = (() => {
   let subscribers: Subscriber[] = []
   let IDer = 0;
+  let latestState: any = null;
 
   const _writeLog = (message: string) => {
     if (LogEnable) {
@@ -19,12 +20,14 @@ export const Emitter = (() => {
     }
   }
 
-  const subscribe = (mapStateFn: Function, initSate: any, callbackFn: Function, logger: Function): Function => {
+  const subscribe = (mapStateFn: Function, callbackFn: Function, logger: Function): Function => {
     const id = IDer
+    const initSate = mapStateFn(latestState)
+    callbackFn(initSate)
     subscribers.push({ 
       id,
       mapStateFn,
-      lastState: initSate,
+      currentState: initSate,
       callbackFn,
       logger
     })
@@ -35,11 +38,16 @@ export const Emitter = (() => {
   }
 
   const publish = (appState: any) => {
+    
+    // store the latest app state
+    latestState = appState
     _writeLog(`SUBSCRIBERS: ${subscribers.length}`)
+    
     // iterate over subscribers
     for (const subscriber of subscribers) {
-      const { callbackFn, lastState, mapStateFn, logger } = subscriber
+      const { callbackFn, currentState, mapStateFn, logger } = subscriber
       const nextState = mapStateFn(appState)
+
       let isChanged = false
       const keys = Object.keys(nextState)
       const len = keys.length
@@ -47,11 +55,12 @@ export const Emitter = (() => {
       // check change
       for (let i = 0; i < len; i++) {
         let key = keys[i]
-        if (nextState[key] !== lastState[key]) {
+        if (nextState[key] !== currentState[key]) {
           isChanged = true
           break
         }
       }
+
       // slice data not change
       if (!isChanged) {
         return
@@ -59,10 +68,12 @@ export const Emitter = (() => {
 
       // logging
       if (logger) {
-        logger({ previous: subscriber.lastState, next: nextState })
+        logger({ previous: subscriber.currentState, next: nextState })
       }
+      
       // updata latest state
-      subscriber.lastState = nextState
+      subscriber.currentState = nextState
+      
       // notify
       callbackFn(nextState)
     }
