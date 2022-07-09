@@ -1,24 +1,25 @@
 import { Emitter } from '../store/emitter';
-import { AdminInitState, adminReducer, AdminPage } from './admin/reducer'
+import { UserInitState, userReducer } from './users/reducer'
+import { UserFeature } from './users/types'
 import { HttpInitState, httpReducer } from './http/reducer'
 import { HttpFeature } from './http/types'
 import { ResourcesInitState, resourcesReducer, ResourcesPage } from './resources/reducer'
 
 export const RootInitState = {
-  [AdminPage]: AdminInitState,
+  [UserFeature]: UserInitState,
   [HttpFeature]: HttpInitState,
   [ResourcesPage]: ResourcesInitState
 }
 
 const AllReducers = {
-  [AdminPage]: adminReducer,
+  [UserFeature]: userReducer,
   [HttpFeature]: httpReducer,
   [ResourcesPage]: resourcesReducer
 } as any;
 
 
 // set initial state for emitter
-Emitter.publish(RootInitState);
+// Emitter.publish(RootInitState);
 
 export const rootReducer = (state: any = RootInitState, action: any) => {
   const { meta: { feature = '' } = {}} = action

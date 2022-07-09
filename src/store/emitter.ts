@@ -7,27 +7,23 @@ export interface Subscriber {
 }
 
 // handle Emitter logging
-const LogEnable = true
+const LogEnable = false
 
 export const Emitter = (() => {
   let subscribers: Subscriber[] = []
   let IDer = 0;
-  let latestState: any = null;
-
   const _writeLog = (message: string) => {
     if (LogEnable) {
       console.log(`%c${message}`, 'color: green')
     }
   }
 
-  const subscribe = (mapStateFn: Function, callbackFn: Function, logger: Function): Function => {
+  const subscribe = (mapStateFn: Function, initState: any, callbackFn: Function, logger: Function): Function => {
     const id = IDer
-    const initSate = mapStateFn(latestState)
-    callbackFn(initSate)
     subscribers.push({ 
       id,
       mapStateFn,
-      currentState: initSate,
+      currentState: initState,
       callbackFn,
       logger
     })
@@ -40,7 +36,6 @@ export const Emitter = (() => {
   const publish = (appState: any) => {
     
     // store the latest app state
-    latestState = appState
     _writeLog(`SUBSCRIBERS: ${subscribers.length}`)
     
     // iterate over subscribers
@@ -62,8 +57,9 @@ export const Emitter = (() => {
       }
 
       // slice data not change
+      // move to next one
       if (!isChanged) {
-        return
+        continue
       }
 
       // logging

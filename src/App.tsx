@@ -8,6 +8,7 @@ import * as Actions from './features/http/actions';
 import Client from './pages/client';
 import Http from './pages/http';
 import Resources from './pages/resources';
+import Users from './pages/Users';
 
 const mapStateToProps = ((state: any) => {
   const {
@@ -21,58 +22,13 @@ const mapStateToProps = ((state: any) => {
 function App() {
   // const [{ status }, dispatch] = useStore(mapStateToProps, null, logger)
   const [{ status }, dispatch] = useStore(mapStateToProps, null)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-  // useStore(mapStateToProps, null, logger)
-
-
-  // const [{ status : a }] = useStore(mapStateToProps, null, logger)
-  console.log(status)
+  // console.log(status)
  
   useEffect(() => {
     const pt = setInterval(() => {
       // setTime(Date.now())
       let index = Math.floor(Math.random() * 1000) % 4
+      // console.log('index ', index)
       // index = 2
       // @ts-ignore
       let action;
@@ -96,8 +52,9 @@ function App() {
         default:
           action = Actions.httpRequestingAction()
       }
+     
       dispatch(action)
-    }, 50000)
+    }, 100)
     
     return () => clearInterval(pt)
   }, [dispatch])
@@ -106,7 +63,7 @@ function App() {
   useEffect(() => {
     setInterval(() => {
       let n = Math.floor((Math.random() * 10) % 10)
-      // n = 10
+      n = 10
       setAppear(n)
     }, 10000)
   }, [])
@@ -117,9 +74,9 @@ function App() {
         <p>{status}</p>
         <p>{v4()}</p>
       </div>
-
+      <Users />
       <div>
-        { (appear === 0) && <div>
+        {/* { (appear === 0) && <div>
           <Client></Client>
           <Http></Http>
           <Resources></Resources>
@@ -146,7 +103,7 @@ function App() {
         { (appear === 4) && <div>
           <Resources></Resources>
         </div>
-        }
+        } */}
       </div>
     </div>
   );

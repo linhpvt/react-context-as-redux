@@ -3,10 +3,17 @@ import { StoreContext } from './context'
 import { Emitter } from './emitter'
 
 export const useStore = (mapStateFn: Function | any, mapDispatchFn: Function | any, logger?: Function | any) => {
-  const {dispatch} = useContext(StoreContext)
+  const {dataStore, dispatch} = useContext(StoreContext)
   
   // state
-  const [state, setState] = useState({})
+  const initState = useMemo(() => {
+    if ( typeof mapStateFn === 'function') {
+      return mapStateFn(dataStore)
+    }
+    return mapStateFn
+  }, [mapStateFn, dataStore])
+
+  const [state, setState] = useState(initState)
   
   // map dispatch
   const mapDispatch = useMemo(() => {
@@ -22,14 +29,15 @@ export const useStore = (mapStateFn: Function | any, mapDispatchFn: Function | a
       return () => {}
     }
 
-    const unsubscriber = Emitter.subscribe(mapStateFn, (newState: any) => {
+    const unsubscriber = Emitter.subscribe(mapStateFn, initState, (newState: any) => {
+      // console.log('newstate', newState)
       setState(newState)
     }, logger)
     return () => {
       unsubscriber()
     }
 
-  }, [mapStateFn, logger])
+  }, [mapStateFn, initState, logger])
   
   return [state, typeof mapDispatchFn === 'function' ? mapDispatch: dispatch, dispatch]
 }
